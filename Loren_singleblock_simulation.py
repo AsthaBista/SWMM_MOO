@@ -5,7 +5,7 @@ from pyswmm import Simulation, Nodes
 start_time = time.time()
 
 # Simulation setup
-with Simulation(r'C:\Users\ABI\OneDrive - NIVA\PhD_Work\Work\PartII\Loren\SWMMFiles\Loren_singleblock.inp') as sim:
+with Simulation(r'C:\Users\ABI\OneDrive - NIVA\PhD_Work\Work\PartII\Loren\SWMM_MOO\SWMMFiles\Loren_singleblock.inp') as sim:
     # Simulation information
     print("Simulation info")
     flow_units = sim.flow_units

@@ -1,0 +1,136 @@
+
+
+;;____________________________________________________________________________________________________
+[TITLE]
+;;Project Title/Notes
+Simulation of a single block in Løren
+
+;;____________________________________________________________________________________________________
+[OPTIONS]
+FLOW_UNITS           CMS
+INFILTRATION         HORTON
+FLOW_ROUTING         DYNWAVE
+LINK_OFFSETS         DEPTH
+MIN_SLOPE            0
+ALLOW_PONDING        YES
+SKIP_STEADY_STATE    NO
+START_DATE           01/01/1968
+START_TIME           00:00:00
+REPORT_START_DATE    01/01/1968
+REPORT_START_TIME    00:00:00
+END_DATE             01/01/2024
+END_TIME             00:00:00
+SWEEP_START          01/01
+SWEEP_END            12/31
+DRY_DAYS             0
+REPORT_STEP          00:02:00
+WET_STEP             00:01:00
+DRY_STEP             00:01:00
+ROUTING_STEP         0:01:00
+RULE_STEP            00:00:00
+INERTIAL_DAMPING     PARTIAL
+NORMAL_FLOW_LIMITED  BOTH
+FORCE_MAIN_EQUATION  H-W
+VARIABLE_STEP        0.75
+LENGTHENING_STEP     0
+MIN_SURFAREA         1.167
+MAX_TRIALS           8
+HEAD_TOLERANCE       0.0015
+SYS_FLOW_TOL         5
+LAT_FLOW_TOL         5
+MINIMUM_STEP         0.5
+THREADS              1
+
+;;____________________________________________________________________________________________________
+[EVAPORATION]
+;;Data Source    Parameters
+;;-------------- ----------------
+TEMPERATURE 
+DRY_ONLY         NO
+
+;;____________________________________________________________________________________________________
+[TEMPERATURE]
+;;Data Element     Values     
+FILE               "obs_temperatures.dat" *          C10
+WINDSPEED MONTHLY  0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+SNOWMELT           34 0.5 0.6 0.0 50.0 0.0
+ADC IMPERVIOUS     1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+ADC PERVIOUS       1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+
+;;____________________________________________________________________________________________________
+[RAINGAGES]
+;;Name           Format    Interval SCF      Source    
+;;-------------- --------- ------ ------ ----------
+RG1              INTENSITY 0:01     1.0      TIMESERIES LongTerm_Blindern
+
+;;____________________________________________________________________________________________________
+[SUBCATCHMENTS]
+;;Name           Rain Gage        Outlet           Area     %Imperv  Width    %Slope   CurbLen  SnowPack        
+;;-------------- ---------------- ---------------- -------- -------- -------- -------- -------- ----------------
+S1               RG1              S8               0.09     100      13.04    0.5      0                        
+S2               RG1              S5               0.05     100      13.81    0.5      0                        
+S3               RG1              S7               0.05     100      14.03    0.5      0                        
+S4               RG1              S10              0.09     100      12.79    0.5      0                        
+S5               RG1              O                0.27     100      8.1      0.5      0                        
+S6               RG1              O                0.004    100      16.16    0.6      0                        
+S7               RG1              O                0.02     100      6.62     0.5      0                        
+S8               RG1              O                0.03     100      11.69    0.5      0                        
+S9               RG1              O                0.03     100      11.72    0.5      0                        
+S10              RG1              O                0.03     100      11.1     0.5      0                        
+S11              RG1              O                0.02     100      19.6     0.5      0
+
+;;____________________________________________________________________________________________________
+[SUBAREAS]
+;;Subcatchment   N-Imperv   N-Perv     S-Imperv   S-Perv     PctZero    RouteTo    PctRouted 
+;;-------------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
+S1               0.01       0.1        0.05       0.05       25         OUTLET    
+S2               0.01       0.1        0.05       0.05       25         OUTLET    
+S3               0.01       0.1        0.05       0.05       25         OUTLET    
+S4               0.01       0.1        0.05       0.05       25         OUTLET    
+S5               0.01       0.1        0.05       0.05       25         OUTLET    
+S6               0.01       0.1        0.05       0.05       25         OUTLET    
+S7               0.01       0.1        0.05       0.05       25         OUTLET    
+S8               0.01       0.1        0.05       0.05       25         OUTLET    
+S9               0.01       0.1        0.05       0.05       25         OUTLET    
+S10              0.01       0.1        0.05       0.05       25         OUTLET    
+S11              0.01       0.1        0.05       0.05       25         OUTLET
+
+;;____________________________________________________________________________________________________
+[INFILTRATION]
+;;Subcatchment   Param1     Param2     Param3     Param4     Param5    
+;;-------------- ---------- ---------- ---------- ---------- ----------
+S1               3.0        0.5        4          7          0         
+S2               3.0        0.5        4          7          0         
+S3               3.0        0.5        4          7          0         
+S4               3.0        0.5        4          7          0         
+S5               3.0        0.5        4          7          0         
+S6               3.0        0.5        4          7          0         
+S7               3.0        0.5        4          7          0         
+S8               3.0        0.5        4          7          0         
+S9               3.0        0.5        4          7          0         
+S10              3.0        0.5        4          7          0         
+S11              3.0        0.5        4          7          0
+
+;;____________________________________________________________________________________________________
+[LID_CONTROLS]
+;;Name           Type/Layer Parameters
+;;-------------- ---------- ----------
+GR5              GR
+GR5              SURFACE    20         0.0        0.1        1.0        5         
+GR5              SOIL       50         0.5        0.3        0.1        10         10.0       100       
+GR5              DRAINMAT   3          0.5        0.1       
+
+GR20             GR
+GR20             SURFACE    20         0.0        0.1        1.0        5         
+GR20             SOIL       200        0.5        0.3        0.1        10         10.0       100       
+GR20             DRAINMAT   10         0.8        0.1       
+
+BC               BC
+BC               SURFACE    150        0.0        0.1        1.0        5         
+BC               SOIL       600        0.5        0.2        0.1        0.5        10.0       3.5       
+BC               STORAGE    100        0.75       0.5        0          NO        
+BC               DRAIN      0          0.5        6          6          0          0
+
+;;____________________________________________________________________________________________________
+[LID_USAGE]
+S1 GR5 1 938 100 0 0 0 * * 0
