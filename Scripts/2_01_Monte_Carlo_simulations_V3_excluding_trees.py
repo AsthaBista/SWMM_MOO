@@ -9,7 +9,7 @@ import numpy as np
 
 # Paths
 csv_file_path = r"C:\Users\ABI\My_Files\MonteCarlo\filtered_random_LID_data_with_trees.csv"
-input_file = r"C:\Users\ABI\My_Files\MonteCarlo\SWMMFiles\Loren_singleblock_LT_perv_imperv.inp"
+input_file = r"C:\Users\ABI\My_Files\MonteCarlo\SWMMFiles\Loren_singleblock_LT_perv_imperv_withouttrees.inp"
 base_name = os.path.basename(input_file).replace(".inp", "")
 temp_inp = r"C:\Users\ABI\My_Files\MonteCarlo\SWMMFiles\model_temp.inp"
 temp_rpt = temp_inp.replace(".inp", ".rpt")
@@ -51,9 +51,13 @@ for sim_number in range(0, len(df)):
         sub = f"S{i}"
         lid_area = row_data[sub]
         lid_type = row_data[f"{sub}_Type"]
-        new_area = row_data[f"{sub}_Aimp"]
-        inp.SUBCATCHMENTS[sub].area = round(new_area * 0.0001, 4)
-        if lid_area > 0:
+        new_imperv_area = row_data[f"{sub}_Aimp"]
+        total_area = inp.SUBCATCHMENTS[sub].area 
+        new_imperv_percent = (new_imperv_area / (total_area * 10000)) * 100
+        inp.SUBCATCHMENTS[sub].imperv = round(new_imperv_percent, 2)
+        
+        
+        if lid_area > 0 and lid_type != 'TRE':                          # This parts skips adding of trees into the model
             inp["LID_USAGE"][(sub, lid_type)] = LIDUsage(
                 subcatchment=sub,
                 lid=lid_type,
