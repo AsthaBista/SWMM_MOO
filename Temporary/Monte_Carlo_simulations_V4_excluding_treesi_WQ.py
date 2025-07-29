@@ -14,6 +14,7 @@ base_name = os.path.basename(input_file).replace(".inp", "")
 temp_inp = r"C:\Users\ABI\My_Files\MonteCarlo\SWMMFiles\model_temp.inp"
 temp_rpt = temp_inp.replace(".inp", ".rpt")
 results_dir = r"C:\Users\ABI\My_Files\MonteCarlo\Results"
+results_wq = r"C:\Users\ABI\My_Files\MonteCarlo\Results_WQ"
 
 
 # Constants
@@ -22,7 +23,7 @@ yr_start, yr_stop = 1968, 2023
 # Load CSV data
 df = pd.read_csv(csv_file_path, delimiter=";")
 
-for sim_number in range(0, len(df)):
+for sim_number in range(0, 1):
     row_data = df.iloc[sim_number]
     inp = SwmmInput(input_file)
     
@@ -75,6 +76,7 @@ for sim_number in range(0, len(df)):
             )
 
     results = []
+    lid_flow_results =[]
     
     for year in range(yr_start, yr_stop + 1):
         sim_start = datetime.date(year, 5, 1)
@@ -109,6 +111,8 @@ for sim_number in range(0, len(df)):
         INF = rpt.runoff_quantity_continuity['Infiltration Loss']['Depth_mm']
         PHI = round((PRE - EVA - INF) / PRE, 2) if PRE > 0 else 0
         
+        
+        
 
         results.append({
             'YEAR': year,
@@ -121,6 +125,45 @@ for sim_number in range(0, len(df)):
             'PHI': PHI,
             
         })
+        
+        ## Extract flow values for water quality calculations
+        
+        gr_drain = []
+        bc_outflow =[]
+        bc_drain = []
+        gs_outflow = []
+        
+        rpt_lid = rpt.lid_performance_summary
+        if rpt_lid is not None:
+            for i in range(1, 5):
+                sub = f"S{i}"
+                if sub in rpt_lid.index:
+                    gr_drain.append(rpt_lid['Surface_Outflow_mm'].loc[sub])
+            
+            for i in [5, 7, 8, 9, 10, 11]:
+                sub = f"S{i}"
+                if sub in rpt_lid.index:
+                    if rpt_lid['LID'].loc[sub] == 'BC':
+                        bc_outflow.append(rpt_lid['Infil_Loss_mm'].loc[sub])
+                        bc_drain.append(rpt_lid['Surface_Outflow_mm'].loc[sub])
+                    else:
+                        gs_outflow.append(rpt_lid['Infil_Loss_mm'].loc[sub])
+
+       # Summing flow values for water quality calculations
+        gr_drain_total = round(sum(gr_drain), 3)
+        bc_outflow_total = round(sum(bc_outflow), 3)
+        bc_drain_total = round(sum(bc_drain), 3)
+        gs_outflow_total = round(sum(gs_outflow), 3)
+        
+        # Append to water quality results
+        lid_flow_results.append({
+            'YEAR': year,
+            'GR_DRAIN': gr_drain_total,
+            'BC_Outflow': bc_outflow_total,
+            'BC_Drain': bc_drain_total,
+            'GS_Outflow': gs_outflow_total
+        })        
+            
 
     results_df = pd.DataFrame(results)
     results_df.to_csv(
@@ -128,5 +171,23 @@ for sim_number in range(0, len(df)):
         index=False,
         sep=';'
     )
+    
+    # Compute average LID flow metrics over all years for this simulation
+    lid_flow_results_df = pd.DataFrame(lid_flow_results)
+    avg_lid_flows = lid_flow_results_df[['GR_DRAIN', 'BC_Outflow', 'BC_Drain', 'GS_Outflow']].mean().round(3)
+    avg_lid_flows['Sim'] = sim_number  # Tag simulation number
+    
+    # # Append to master file (all simulations)
+    # summary_csv_path = os.path.join(r'C:\Users\ABI\My_Files\MonteCarlo', "swmm_MC_flow_summary_avg.csv")
+    
+    #     # If the summary file already exists, append to it; else, create it
+    # if os.path.exists(summary_csv_path):
+    #     existing_df = pd.read_csv(summary_csv_path, sep=';')
+    #     updated_df = pd.concat([existing_df, pd.DataFrame([avg_lid_flows])], ignore_index=True)
+    # else:
+    #     updated_df = pd.DataFrame([avg_lid_flows])
 
-    print(f"Simulation {sim_number} completed and saved.")
+    # # Save the updated summary file
+    # updated_df.to_csv(summary_csv_path, index=False, sep=';')
+    # print(f"Simulation {sim_number} completed and saved.")
+    

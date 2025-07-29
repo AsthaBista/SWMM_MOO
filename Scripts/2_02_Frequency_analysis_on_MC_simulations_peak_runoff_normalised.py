@@ -22,16 +22,19 @@ for idx, file in enumerate(csv_files, start=1):
 
     # Compute total TR and PHI
     total_TR = df['TR'].sum()
-    total_PHI = df['PHI'].sum()
+    total_PRE = df['PRE'].sum()
+    total_EVA = df['EVA'].sum()
+    total_INF = df['INF'].sum()
 
     # Rank values and compute Weibull Distribution
-    df['Rank'] = df['norm_PR'].rank(ascending=False)
+    df['Rank'] = df['PR'].rank(ascending=False)
     df1 = df.sort_values(by='Rank', ascending=True)
     df1['Pe'] = df1['Rank'] / (len(df1) + 1)
     df1['T'] = 1 / df1['Pe']
 
     # Store results in a dictionary for the current file
-    result_entry = {"sim_number": f"sim{idx}", "total_TR": round(total_TR, 2), "total_PHI": round(total_PHI, 2)}
+    result_entry = {"sim_number": f"sim{idx}", "total_TR": round(total_TR, 2), "total_PRE": round(total_PRE, 2),
+                    "total_EVA": round(total_EVA, 2), "total_INF": round(total_INF, 2)}
 
     for target_T in return_periods:
         df1["T_diff"] = (df1["T"] - target_T).abs()
@@ -46,7 +49,7 @@ for idx, file in enumerate(csv_files, start=1):
 results_df = pd.DataFrame(results)
 
 # Save results to CSV
-output_file = r'C:\Users\ABI\My_Files\MonteCarlo\normalized_peakrunoff_for_return_periods.csv'
+output_file = r'C:\Users\ABI\My_Files\MonteCarlo\simulation_output_for_scenarios.csv'
 results_df.to_csv(output_file, index=False, sep=';')
 
 print(f"Results saved to {output_file}")

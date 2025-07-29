@@ -71,4 +71,4 @@ filtered_df = pd.DataFrame.from_dict(lid_values, orient="index")
 # Print or save the filtered DataFrame
 print(filtered_df)
 
-filtered_df.to_csv(r"C:\Users\ABI\OneDrive - NIVA\PhD_Work\Work\PartII\Loren\filtered_random_LID_data_with_trees.csv", index=True, sep=";")
+filtered_df.to_csv(r"C:\Users\ABI\My_Files\MonteCarlo\filtered_random_LID_data_with_trees.csv", index=True, sep=";")
