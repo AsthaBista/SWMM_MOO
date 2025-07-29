@@ -8,7 +8,7 @@ from pyswmm import Simulation, Nodes
 import numpy as np
 
 # Paths
-csv_file_path = r"C:\Users\ABI\My_Files\MonteCarlo\filtered_random_LID_data_with_trees.csv"
+csv_file_path = r"C:\Users\ABI\OneDrive - NIVA\Documents\GitHub\SWMM_MOO\01_Preprocessing\0103_Data_cleaned_random_generated_scenarios.csv"
 input_file = r"C:\Users\ABI\My_Files\MonteCarlo\SWMMFiles\Loren_singleblock_LT_perv_imperv_withouttrees.inp"
 base_name = os.path.basename(input_file).replace(".inp", "")
 temp_inp = r"C:\Users\ABI\My_Files\MonteCarlo\SWMMFiles\model_temp.inp"
@@ -22,7 +22,7 @@ yr_start, yr_stop = 1968, 2023
 # Load CSV data
 df = pd.read_csv(csv_file_path, delimiter=";")
 
-for sim_number in range(0, len(df)):
+for sim_number in range(0, 2):
     row_data = df.iloc[sim_number]
     inp = SwmmInput(input_file)
     
@@ -53,10 +53,10 @@ for sim_number in range(0, len(df)):
         sub = f"S{i}"
         lid_area = row_data[sub]
         lid_type = row_data[f"{sub}_Type"]
-        # new_imperv_area = row_data[f"{sub}_Aimp"]
-        # total_area = inp.SUBCATCHMENTS[sub].area 
-        # new_imperv_percent = (new_imperv_area / (total_area * 10000)) * 100
-        # inp.SUBCATCHMENTS[sub].imperviousness = round(new_imperv_percent, 2)
+        new_imperv_area = row_data[f"{sub}_Aimp"]
+        total_area = inp.SUBCATCHMENTS[sub].area 
+        new_imperv_percent = (new_imperv_area / (total_area * 10000)) * 100
+        inp.SUBCATCHMENTS[sub].imperviousness = round(new_imperv_percent, 2)
         
         
         if lid_area > 0 and lid_type != 'TRE':                          # This parts skips adding of trees into the model
