@@ -9,7 +9,7 @@ It prepares an output called filtered_random_LID_data.csv.
 """
 import pandas as pd
 
-csv_file = pd.read_csv(r'C:\Users\ABI\OneDrive - NIVA\PhD_Work\Work\PartII\Loren\Random_generated_LID_with_trees.csv',sep=';')
+csv_file = pd.read_csv(r'C:\Users\ABI\OneDrive - NIVA\Documents\GitHub\SWMM_MOO\01_Preprocessing\0102_Copy_of_Random_generation_of_scenarios.csv',sep=';')
 #print(csv_file.head())
 
 df = pd.DataFrame(csv_file)
@@ -71,4 +71,4 @@ filtered_df = pd.DataFrame.from_dict(lid_values, orient="index")
 # Print or save the filtered DataFrame
 print(filtered_df)
 
-filtered_df.to_csv(r"C:\Users\ABI\My_Files\MonteCarlo\filtered_random_LID_data_with_trees.csv", index=True, sep=";")
+filtered_df.to_csv(r"C:\Users\ABI\OneDrive - NIVA\Documents\GitHub\SWMM_MOO\01_Preprocessing\0103_Data_cleaned_random_generated_scenarios.csv", index=True, sep=";")
