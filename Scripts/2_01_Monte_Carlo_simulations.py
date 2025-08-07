@@ -22,7 +22,7 @@ yr_start, yr_stop = 1968, 2023
 # Load CSV data
 df = pd.read_csv(csv_file_path, delimiter=";")
 
-for sim_number in range(0, 2):
+for sim_number in range(0, len(df)):
     row_data = df.iloc[sim_number]
     inp = SwmmInput(input_file)
     
