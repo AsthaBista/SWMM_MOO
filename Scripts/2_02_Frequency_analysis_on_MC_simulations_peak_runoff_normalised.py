@@ -21,7 +21,7 @@ for idx, file in enumerate(csv_files, start=1):
     df = pd.read_csv(file_path, sep=';')
 
     # Compute total TR and PHI
-    total_TR = df['TR'].sum()
+    total_TR = df['TR'].mean()
     total_PRE = df['PRE'].sum()
     total_EVA = df['EVA'].sum()
     total_INF = df['INF'].sum()
